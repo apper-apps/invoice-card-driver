@@ -1,9 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
+import { formatCurrency } from "@/utils/helpers";
 import ApperIcon from "@/components/ApperIcon";
 import Input from "@/components/atoms/Input";
-import { formatCurrency } from "@/utils/helpers";
 
-const ItemsTable = ({ items, onItemChange }) => {
+const ItemsTable = ({ items, onItemChange, itemHistory = [] }) => {
+  const [activeDropdown, setActiveDropdown] = useState(null);
+  const [searchQueries, setSearchQueries] = useState({});
+
+  const handleDescriptionChange = (index, value) => {
+    setSearchQueries(prev => ({ ...prev, [index]: value }));
+    onItemChange(index, "description", value);
+  };
+
+  const getFilteredItems = (query) => {
+    if (!query || query.length < 1) return [];
+    return itemHistory.filter(item => 
+      item.description.toLowerCase().includes(query.toLowerCase())
+    );
+  };
+
+  const handleItemSelection = (index, historyItem) => {
+    onItemChange(index, "description", historyItem.description);
+    onItemChange(index, "rate", historyItem.rate);
+    setActiveDropdown(null);
+    setSearchQueries(prev => ({ ...prev, [index]: "" }));
+  };
   return (
     <div className="form-section">
       <h2>
@@ -33,19 +54,35 @@ const ItemsTable = ({ items, onItemChange }) => {
             </tr>
           </thead>
           <tbody>
-            {items.map((item, index) => (
-              <tr key={item.id} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
+{items?.map((item, index) => (
+              <tr key={item.id || index} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
                 <td className="border border-gray-300 px-3 py-2 text-center text-sm">
                   {index + 1}
                 </td>
-                <td className="border border-gray-300 px-3 py-2">
+<td className="border border-gray-300 px-3 py-2 relative">
                   <Input
                     type="text"
                     value={item.description}
-                    onChange={(e) => onItemChange(index, "description", e.target.value)}
+                    onChange={(e) => handleDescriptionChange(index, e.target.value)}
                     placeholder="Enter item description"
                     className="border-0 shadow-none focus:ring-0 p-1 text-sm"
+onFocus={() => setActiveDropdown(item.description?.length > 0 ? index : null)}
+                    onBlur={() => setTimeout(() => setActiveDropdown(null), 200)}
                   />
+                  {activeDropdown === index && getFilteredItems(searchQueries[index] || item.description).length > 0 && (
+                    <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-40 overflow-y-auto">
+                      {getFilteredItems(searchQueries[index] || item.description).map((historyItem, historyIndex) => (
+                        <div
+                          key={historyIndex}
+                          className="px-2 py-1 cursor-pointer hover:bg-gray-100 border-b border-gray-50"
+                          onClick={() => handleItemSelection(index, historyItem)}
+                        >
+                          <div className="text-sm font-medium text-gray-900">{historyItem.description}</div>
+                          <div className="text-xs text-gray-500">Rate: {formatCurrency(historyItem.rate)}</div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </td>
                 <td className="border border-gray-300 px-3 py-2">
                   <Input

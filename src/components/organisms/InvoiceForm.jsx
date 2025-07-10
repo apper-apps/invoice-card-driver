@@ -1,10 +1,10 @@
 import React from "react";
 import ApperIcon from "@/components/ApperIcon";
-import InvoiceDetails from "@/components/molecules/InvoiceDetails";
 import CustomerDetails from "@/components/molecules/CustomerDetails";
 import ItemsTable from "@/components/molecules/ItemsTable";
-import TaxSummary from "@/components/molecules/TaxSummary";
 import ActionButtons from "@/components/molecules/ActionButtons";
+import TaxSummary from "@/components/molecules/TaxSummary";
+import InvoiceDetails from "@/components/molecules/InvoiceDetails";
 
 const InvoiceForm = ({
   invoiceData,
@@ -49,7 +49,7 @@ const InvoiceForm = ({
         onInputChange={onInputChange}
       />
 
-      {/* Items Table */}
+{/* Items Table */}
       <ItemsTable
         items={invoiceData.items}
         onItemChange={onItemChange}

@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import InvoiceForm from "@/components/organisms/InvoiceForm";
-import InvoicePreview from "@/components/organisms/InvoicePreview";
-import InvoiceService from "@/services/api/InvoiceService";
 import { generateInvoicePDF } from "@/utils/pdfGenerator";
-import { formatCurrency, convertToWords } from "@/utils/helpers";
+import { convertToWords, formatCurrency } from "@/utils/helpers";
+import InvoicePreview from "@/components/organisms/InvoicePreview";
+import InvoiceForm from "@/components/organisms/InvoiceForm";
+import InvoiceService from "@/services/api/InvoiceService";
 
 const InvoiceGenerator = () => {
-const [invoiceData, setInvoiceData] = useState({
+  const [invoiceData, setInvoiceData] = useState({
     invoiceNumber: "",
     invoiceDate: new Date().toISOString().split("T")[0],
     dueDate: new Date().toISOString().split("T")[0],
@@ -28,7 +28,8 @@ const [invoiceData, setInvoiceData] = useState({
   });
   const [isGenerating, setIsGenerating] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
-
+  const [customers, setCustomers] = useState([]);
+  const [items, setItems] = useState([]);
   useEffect(() => {
     loadNextInvoiceNumber();
   }, []);
@@ -180,16 +181,35 @@ setInvoiceData({
       }))
     });
     setShowPreview(false);
+setShowPreview(false);
+  };
+
+  const handleCustomerSelect = (customer) => {
+    if (customer) {
+      setInvoiceData(prev => ({
+        ...prev,
+        customerName: customer.name || "",
+        customerAddress: customer.address || "",
+        customerGSTIN: customer.gstin || "",
+        customerMobile: customer.mobile || ""
+      }));
+    }
+  };
+
+  const handleItemSelect = (selectedItem, index) => {
+    if (selectedItem && index >= 0 && index < invoiceData.items.length) {
+      handleItemChange(index, "description", selectedItem.description || "");
+      handleItemChange(index, "rate", selectedItem.rate || 0);
+    }
   };
 
   const totals = calculateTotals();
-
   return (
     <div className="max-w-7xl mx-auto">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Invoice Form */}
         <div className="space-y-6">
-          <InvoiceForm
+<InvoiceForm
             invoiceData={invoiceData}
             onInputChange={handleInputChange}
             onItemChange={handleItemChange}
@@ -198,6 +218,10 @@ setInvoiceData({
             onGenerateInvoice={handleGenerateInvoice}
             onPreview={handlePreview}
             onClearForm={handleClearForm}
+            customers={customers}
+            items={items}
+            onCustomerSelect={handleCustomerSelect}
+            onItemSelect={handleItemSelect}
           />
         </div>
 

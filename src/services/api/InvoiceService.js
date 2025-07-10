@@ -55,6 +55,92 @@ class InvoiceService {
         resolve(invoice);
       }, 200);
     });
+});
+  }
+
+  // Customer data persistence methods
+  static async saveCustomerData(customerData) {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const customers = JSON.parse(localStorage.getItem("customers") || "[]");
+        const existingIndex = customers.findIndex(c => 
+          c.customerName.toLowerCase() === customerData.customerName.toLowerCase()
+        );
+        
+        if (existingIndex >= 0) {
+          customers[existingIndex] = { ...customerData, updatedAt: new Date().toISOString() };
+        } else {
+          customers.push({ ...customerData, createdAt: new Date().toISOString() });
+        }
+        
+        localStorage.setItem("customers", JSON.stringify(customers));
+        resolve(customerData);
+      }, 100);
+    });
+  }
+
+  static async getCustomers() {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const customers = JSON.parse(localStorage.getItem("customers") || "[]");
+        resolve(customers);
+      }, 100);
+    });
+  }
+
+  static async searchCustomers(query) {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const customers = JSON.parse(localStorage.getItem("customers") || "[]");
+        const filtered = customers.filter(c => 
+          c.customerName.toLowerCase().includes(query.toLowerCase()) ||
+          c.customerMobile.includes(query)
+        );
+        resolve(filtered);
+      }, 100);
+    });
+  }
+
+  // Item data persistence methods
+  static async saveItemData(itemData) {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const items = JSON.parse(localStorage.getItem("items_history") || "[]");
+        const existingIndex = items.findIndex(i => 
+          i.description.toLowerCase() === itemData.description.toLowerCase()
+        );
+        
+        if (existingIndex >= 0) {
+          items[existingIndex] = { ...itemData, updatedAt: new Date().toISOString() };
+        } else {
+          items.push({ ...itemData, createdAt: new Date().toISOString() });
+        }
+        
+        localStorage.setItem("items_history", JSON.stringify(items));
+        resolve(itemData);
+      }, 100);
+    });
+  }
+
+  static async getItems() {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const items = JSON.parse(localStorage.getItem("items_history") || "[]");
+        resolve(items);
+      }, 100);
+    });
+  }
+
+  static async searchItems(query) {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const items = JSON.parse(localStorage.getItem("items_history") || "[]");
+        const filtered = items.filter(i => 
+          i.description.toLowerCase().includes(query.toLowerCase())
+        );
+        resolve(filtered);
+      }, 100);
+    });
   }
 }
 
