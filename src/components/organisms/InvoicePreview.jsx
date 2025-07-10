@@ -94,7 +94,7 @@ const InvoicePreview = ({ invoiceData, onClose }) => {
           </table>
         </div>
 
-        {/* Tax Summary */}
+{/* Tax Summary */}
         <div className="grid grid-cols-2 gap-8 mb-6">
           <div>
             <h3 className="text-lg font-semibold text-gray-800 mb-3">Amount in Words</h3>
@@ -109,14 +109,18 @@ const InvoicePreview = ({ invoiceData, onClose }) => {
                   <td className="py-1 text-right font-medium">Subtotal:</td>
                   <td className="py-1 text-right">{formatCurrency(invoiceData.subtotal)}</td>
                 </tr>
-                <tr>
-                  <td className="py-1 text-right font-medium">CGST @ 9%:</td>
-                  <td className="py-1 text-right">{formatCurrency(invoiceData.cgst)}</td>
-                </tr>
-                <tr>
-                  <td className="py-1 text-right font-medium">SGST @ 9%:</td>
-                  <td className="py-1 text-right">{formatCurrency(invoiceData.sgst)}</td>
-                </tr>
+                {invoiceData.taxEnabled && (
+                  <>
+                    <tr>
+                      <td className="py-1 text-right font-medium">CGST @ {invoiceData.cgstRate}%:</td>
+                      <td className="py-1 text-right">{formatCurrency(invoiceData.cgst)}</td>
+                    </tr>
+                    <tr>
+                      <td className="py-1 text-right font-medium">SGST @ {invoiceData.sgstRate}%:</td>
+                      <td className="py-1 text-right">{formatCurrency(invoiceData.sgst)}</td>
+                    </tr>
+                  </>
+                )}
                 <tr className="border-t-2 border-gray-800">
                   <td className="py-2 text-right font-bold text-lg">Grand Total:</td>
                   <td className="py-2 text-right font-bold text-lg">{formatCurrency(invoiceData.grandTotal)}</td>

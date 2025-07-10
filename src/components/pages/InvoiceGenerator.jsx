@@ -7,7 +7,7 @@ import { generateInvoicePDF } from "@/utils/pdfGenerator";
 import { formatCurrency, convertToWords } from "@/utils/helpers";
 
 const InvoiceGenerator = () => {
-  const [invoiceData, setInvoiceData] = useState({
+const [invoiceData, setInvoiceData] = useState({
     invoiceNumber: "",
     invoiceDate: new Date().toISOString().split("T")[0],
     dueDate: new Date().toISOString().split("T")[0],
@@ -15,6 +15,9 @@ const InvoiceGenerator = () => {
     customerAddress: "",
     customerGSTIN: "",
     customerMobile: "",
+    taxEnabled: true,
+    cgstRate: 9,
+    sgstRate: 9,
     items: Array(10).fill().map((_, index) => ({
       id: index + 1,
       description: "",
@@ -23,7 +26,6 @@ const InvoiceGenerator = () => {
       amount: 0
     }))
   });
-
   const [isGenerating, setIsGenerating] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
 
@@ -70,10 +72,10 @@ const InvoiceGenerator = () => {
     }));
   };
 
-  const calculateTotals = () => {
+const calculateTotals = () => {
     const subtotal = invoiceData.items.reduce((sum, item) => sum + item.amount, 0);
-    const cgst = subtotal * 0.09;
-    const sgst = subtotal * 0.09;
+    const cgst = invoiceData.taxEnabled ? subtotal * (invoiceData.cgstRate / 100) : 0;
+    const sgst = invoiceData.taxEnabled ? subtotal * (invoiceData.sgstRate / 100) : 0;
     const grandTotal = subtotal + cgst + sgst;
 
     return {
@@ -128,7 +130,7 @@ const InvoiceGenerator = () => {
       toast.success(`Invoice ${invoiceData.invoiceNumber} generated successfully!`);
       
       // Reset form and load next invoice number
-      setInvoiceData({
+setInvoiceData({
         invoiceNumber: "",
         invoiceDate: new Date().toISOString().split("T")[0],
         dueDate: new Date().toISOString().split("T")[0],
@@ -136,6 +138,9 @@ const InvoiceGenerator = () => {
         customerAddress: "",
         customerGSTIN: "",
         customerMobile: "",
+        taxEnabled: true,
+        cgstRate: 9,
+        sgstRate: 9,
         items: Array(10).fill().map((_, index) => ({
           id: index + 1,
           description: "",
@@ -160,7 +165,7 @@ const InvoiceGenerator = () => {
   };
 
   const handleClearForm = () => {
-    setInvoiceData({
+setInvoiceData({
       ...invoiceData,
       customerName: "",
       customerAddress: "",

@@ -55,9 +55,12 @@ const InvoiceForm = ({
         onItemChange={onItemChange}
       />
 
-      {/* Tax Summary */}
-      <TaxSummary totals={totals} />
-
+{/* Tax Summary */}
+      <TaxSummary 
+        totals={totals} 
+        invoiceData={invoiceData}
+        onInputChange={onInputChange}
+      />
       {/* Action Buttons */}
       <ActionButtons
         isGenerating={isGenerating}

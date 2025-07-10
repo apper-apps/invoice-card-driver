@@ -12,7 +12,7 @@ const InvoiceDetails = ({ invoiceData, onInputChange }) => {
       </h2>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div>
+<div>
           <Label htmlFor="invoiceNumber">Invoice Number</Label>
           <Input
             id="invoiceNumber"
@@ -20,7 +20,6 @@ const InvoiceDetails = ({ invoiceData, onInputChange }) => {
             value={invoiceData.invoiceNumber}
             onChange={(e) => onInputChange("invoiceNumber", e.target.value)}
             placeholder="INV-001"
-            disabled
           />
         </div>
         
