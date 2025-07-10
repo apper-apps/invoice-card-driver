@@ -47,7 +47,7 @@ class InvoiceService {
     });
   }
 
-  static async getInvoiceById(id) {
+static async getInvoiceById(id) {
     return new Promise((resolve) => {
       setTimeout(() => {
         const invoices = JSON.parse(localStorage.getItem("invoices") || "[]");
@@ -55,7 +55,6 @@ class InvoiceService {
         resolve(invoice);
       }, 200);
     });
-});
   }
 
   // Customer data persistence methods
