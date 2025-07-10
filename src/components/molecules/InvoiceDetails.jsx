@@ -18,8 +18,9 @@ const InvoiceDetails = ({ invoiceData, onInputChange }) => {
             id="invoiceNumber"
             type="text"
             value={invoiceData.invoiceNumber}
-            onChange={(e) => onInputChange("invoiceNumber", e.target.value)}
-            placeholder="INV-001"
+            placeholder="Auto-generated"
+            readOnly
+            className="bg-gray-100 cursor-not-allowed"
           />
         </div>
         

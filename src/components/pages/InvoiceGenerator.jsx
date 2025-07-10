@@ -165,8 +165,8 @@ setInvoiceData({
     setShowPreview(true);
   };
 
-  const handleClearForm = () => {
-setInvoiceData({
+const handleClearForm = () => {
+    setInvoiceData({
       ...invoiceData,
       customerName: "",
       customerAddress: "",
@@ -181,7 +181,6 @@ setInvoiceData({
       }))
     });
     setShowPreview(false);
-setShowPreview(false);
   };
 
   const handleCustomerSelect = (customer) => {
